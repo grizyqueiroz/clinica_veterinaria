@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Detalhes da Consulta</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-calendar-check"></i> Detalhes da Consulta
+                            </h3>
+                            <a href="/consultas" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${erro}" class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span th:text="${erro}"></span>
+                        </div>
+                        
+                        <div th:if="${consulta}" class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-calendar-check fa-5x text-success"></i>
+                                </div>
+                                <h4 th:text="${consulta.nomePet}" class="text-primary"></h4>
+                                <span class="badge bg-success fs-6">Agendada</span>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Pet:</label>
+                                        <p th:text="${consulta.nomePet}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Data:</label>
+                                        <p th:text="${consulta.data}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Veterinário:</label>
+                                        <p th:text="${consulta.veterinario}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Motivo:</label>
+                                        <p th:text="${consulta.motivo}" class="form-control-plaintext"></p>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/consultas/{id}/reagendar(id=${consulta.nomePet})}" class="btn btn-warning">
+                                        <i class="fas fa-calendar-alt"></i> Reagendar
+                                    </a>
+                                    <a th:href="@{/pagamentos/novo?pet={nome}(nome=${consulta.nomePet})}" class="btn btn-success">
+                                        <i class="fas fa-credit-card"></i> Processar Pagamento
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+</body>
+</html> 

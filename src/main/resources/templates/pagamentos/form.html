@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Processar Pagamento</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-credit-card"></i> Processar Novo Pagamento
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${erro}" class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span th:text="${erro}"></span>
+                        </div>
+                        
+                        <form th:action="@{/pagamentos}" th:object="${pagamento}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nomePet" class="form-label">Pet *</label>
+                                    <select class="form-select" id="nomePet" th:field="*{nomePet}" required>
+                                        <option value="">Selecione o pet...</option>
+                                        <option th:each="pet : ${pets}" th:value="${pet.nome}" th:text="${pet.nome + ' (' + pet.especie + ')'}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nomePet')}" th:errors="*{nomePet}"></div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="servico" class="form-label">Serviço *</label>
+                                    <select class="form-select" id="servico" th:field="*{servico}" required>
+                                        <option value="">Selecione o serviço...</option>
+                                        <option th:each="serv : ${servicos}" th:value="${serv}" th:text="${serv}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('servico')}" th:errors="*{servico}"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="valor" class="form-label">Valor (R$) *</label>
+                                    <input type="number" class="form-control" id="valor" th:field="*{valor}" 
+                                           step="0.01" min="0" placeholder="0.00" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('valor')}" th:errors="*{valor}"></div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="status" class="form-label">Status</label>
+                                    <select class="form-select" id="status" th:field="*{status}">
+                                        <option value="Pendente">Pendente</option>
+                                        <option value="Aprovado">Aprovado</option>
+                                        <option value="Rejeitado">Rejeitado</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Calculadora de preço -->
+                            <div class="card bg-light mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">
+                                        <i class="fas fa-calculator"></i> Calculadora de Preço
+                                    </h6>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="form-label">Estratégia de Preço</label>
+                                            <select class="form-select" id="estrategia">
+                                                <option value="simples">Consulta Simples</option>
+                                                <option value="especializada">Consulta Especializada</option>
+                                                <option value="emergencia">Emergência</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label class="form-label">Preço Calculado</label>
+                                            <div class="form-control-plaintext" id="precoCalculado">R$ 0,00</div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <button type="button" class="btn btn-outline-primary mt-4" onclick="calcularPreco()">
+                                                <i class="fas fa-calculator"></i> Calcular
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="/pagamentos" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Voltar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-credit-card"></i> Processar Pagamento
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+    
+    <script>
+        function calcularPreco() {
+            const nomePet = document.getElementById('nomePet').value;
+            const servico = document.getElementById('servico').value;
+            const estrategia = document.getElementById('estrategia').value;
+            
+            if (!nomePet || !servico) {
+                alert('Selecione o pet e o serviço primeiro!');
+                return;
+            }
+            
+            fetch(`/pagamentos/calcular-preco?nomePet=${nomePet}&servico=${servico}&estrategia=${estrategia}`)
+                .then(response => response.text())
+                .then(preco => {
+                    document.getElementById('precoCalculado').textContent = preco;
+                    document.getElementById('valor').value = preco.replace('R$ ', '').replace(',', '.');
+                })
+                .catch(error => {
+                    console.error('Erro ao calcular preço:', error);
+                    alert('Erro ao calcular preço!');
+                });
+        }
+    </script>
+</body>
+</html> 

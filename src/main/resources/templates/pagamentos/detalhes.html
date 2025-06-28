@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Detalhes do Pagamento</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-credit-card"></i> Detalhes do Pagamento
+                            </h3>
+                            <a href="/pagamentos" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${erro}" class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span th:text="${erro}"></span>
+                        </div>
+                        
+                        <div th:if="${pagamento}" class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-credit-card fa-5x text-primary"></i>
+                                </div>
+                                <h4 th:text="${pagamento.nomePet}" class="text-primary"></h4>
+                                <span th:if="${pagamento.status == 'Aprovado'}" class="badge bg-success fs-6" th:text="${pagamento.status}"></span>
+                                <span th:if="${pagamento.status == 'Pendente'}" class="badge bg-warning fs-6" th:text="${pagamento.status}"></span>
+                                <span th:if="${pagamento.status == 'Rejeitado'}" class="badge bg-danger fs-6" th:text="${pagamento.status}"></span>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Pet:</label>
+                                        <p th:text="${pagamento.nomePet}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Serviço:</label>
+                                        <p th:text="${pagamento.servico}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Valor:</label>
+                                        <p th:text="${'R$ ' + #numbers.formatDecimal(pagamento.valor, 1, 2)}" class="form-control-plaintext fw-bold text-success"></p>
+                                    </div>
+                                    
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Status:</label>
+                                        <p>
+                                            <span th:if="${pagamento.status == 'Aprovado'}" class="badge bg-success" th:text="${pagamento.status}"></span>
+                                            <span th:if="${pagamento.status == 'Pendente'}" class="badge bg-warning" th:text="${pagamento.status}"></span>
+                                            <span th:if="${pagamento.status == 'Rejeitado'}" class="badge bg-danger" th:text="${pagamento.status}"></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/consultas/nova?pet={nome}(nome=${pagamento.nomePet})}" class="btn btn-success">
+                                        <i class="fas fa-calendar-plus"></i> Agendar Consulta
+                                    </a>
+                                    <button class="btn btn-info" onclick="window.print()">
+                                        <i class="fas fa-print"></i> Imprimir Recibo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+</body>
+</html> 

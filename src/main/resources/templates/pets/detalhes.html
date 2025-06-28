@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Detalhes do Pet</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="card-title mb-0">
+                                <i class="fas fa-paw"></i> Detalhes do Pet
+                            </h3>
+                            <a href="/pets" class="btn btn-outline-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${erro}" class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span th:text="${erro}"></span>
+                        </div>
+                        
+                        <div th:if="${pet}" class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-paw fa-5x text-primary"></i>
+                                </div>
+                                <h4 th:text="${pet.nome}" class="text-primary"></h4>
+                                <span th:text="${pet.especie}" class="badge bg-info fs-6"></span>
+                            </div>
+                            
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Nome:</label>
+                                        <p th:text="${pet.nome}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Espécie:</label>
+                                        <p th:text="${pet.especie}" class="form-control-plaintext"></p>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Idade:</label>
+                                        <p th:text="${pet.idade + ' anos'}" class="form-control-plaintext"></p>
+                                    </div>
+                                </div>
+                                
+                                <hr>
+                                
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/consultas/nova?pet={nome}(nome=${pet.nome})}" class="btn btn-success">
+                                        <i class="fas fa-calendar-plus"></i> Agendar Consulta
+                                    </a>
+                                    <a th:href="@{/pagamentos/novo?pet={nome}(nome=${pet.nome})}" class="btn btn-warning">
+                                        <i class="fas fa-credit-card"></i> Processar Pagamento
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+</body>
+</html> 

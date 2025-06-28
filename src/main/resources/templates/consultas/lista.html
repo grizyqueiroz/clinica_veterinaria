@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Lista de Consultas</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Lista de Consultas</h2>
+                    <a href="/consultas/nova" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Nova Consulta
+                    </a>
+                </div>
+                
+                <!-- Mensagens de feedback -->
+                <div th:if="${mensagem}" th:class="'alert alert-' + ${tipo} + ' alert-dismissible fade show'" role="alert">
+                    <span th:text="${mensagem}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <div th:if="${erro}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${erro}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                
+                <!-- Tabela de consultas -->
+                <div class="card">
+                    <div class="card-body">
+                        <div th:if="${#lists.isEmpty(consultas)}" class="text-center py-4">
+                            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Nenhuma consulta agendada ainda.</p>
+                            <a href="/consultas/nova" class="btn btn-primary">Agendar Primeira Consulta</a>
+                        </div>
+                        
+                        <div th:if="${!#lists.isEmpty(consultas)}">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Pet</th>
+                                            <th>Data</th>
+                                            <th>Veterinário</th>
+                                            <th>Motivo</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="consulta : ${consultas}">
+                                            <td>
+                                                <strong th:text="${consulta.nomePet}"></strong>
+                                            </td>
+                                            <td th:text="${consulta.data}"></td>
+                                            <td th:text="${consulta.veterinario}"></td>
+                                            <td>
+                                                <span th:text="${consulta.motivo}" class="text-muted"></span>
+                                            </td>
+                                            <td>
+                                                <a th:href="@{/consultas/{id}(id=${consulta.nomePet})}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> Ver
+                                                </a>
+                                                <a th:href="@{/consultas/{id}/reagendar(id=${consulta.nomePet})}" class="btn btn-sm btn-outline-warning">
+                                                    <i class="fas fa-calendar-alt"></i> Reagendar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+</body>
+</html> 

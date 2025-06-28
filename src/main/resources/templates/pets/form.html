@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/base :: head}">
+    <title>Cadastrar Pet</title>
+</head>
+<body>
+    <div th:replace="~{layout/base :: navbar}"></div>
+    
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0">
+                            <i class="fas fa-paw"></i> Cadastrar Novo Pet
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <form th:action="@{/pets}" th:object="${pet}" method="post">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="nome" class="form-label">Nome do Pet *</label>
+                                    <input type="text" class="form-control" id="nome" th:field="*{nome}" 
+                                           placeholder="Ex: Rex, Fluffy" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}" th:errors="*{nome}"></div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label for="especie" class="form-label">Espécie *</label>
+                                    <select class="form-select" id="especie" th:field="*{especie}" required>
+                                        <option value="">Selecione...</option>
+                                        <option th:each="esp : ${especies}" th:value="${esp}" th:text="${esp}"></option>
+                                    </select>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('especie')}" th:errors="*{especie}"></div>
+                                </div>
+                                
+                                <div class="col-md-3 mb-3">
+                                    <label for="idade" class="form-label">Idade (anos) *</label>
+                                    <input type="number" class="form-control" id="idade" th:field="*{idade}" 
+                                           min="0" max="30" placeholder="0" required>
+                                    <div class="invalid-feedback" th:if="${#fields.hasErrors('idade')}" th:errors="*{idade}"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <a href="/pets" class="btn btn-secondary">
+                                    <i class="fas fa-arrow-left"></i> Voltar
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Salvar Pet
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div th:replace="~{layout/base :: scripts}"></div>
+</body>
+</html> 
